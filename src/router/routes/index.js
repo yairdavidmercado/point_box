@@ -13,58 +13,6 @@ const Routes = [
     component: lazy(() => import('../../views/home/Home'))
   },
   {
-    path: '/users',
-    component: lazy(() => import('../../views/users/Users'))
-  },
-  {
-    path: '/user/:edit/:id',
-    component: lazy(() => import('../../views/users/detail/UserDetail'))
-  },
-  {
-    path: '/profiles',
-    component: lazy(() => import('../../views/profiles2/Profiles'))
-  },
-  {
-    path: '/profile/:edit/:id/',
-    component: lazy(() => import('../../views/profiles2/detail/ProfileDetail'))
-  },
-  {
-    path: '/cellars',
-    component: lazy(() => import('../../views/cellar/Cellar'))
-  },
-  {
-    path: '/cellar/:edit/:id/',
-    component: lazy(() => import('../../views/cellar/detail/CellarDetail'))
-  },
-  {
-    path: '/movements',
-    component: lazy(() => import('../../views/movement/Movements'))
-  },
-  {
-    path: '/movement/:edit/:id',
-    component: lazy(() => import('../../views/movement/detail/MovementDetail'))
-  },
-  {
-    path: '/movement/add',
-    component: lazy(() => import('../../views/movement/addmovement/AddNewMovement'))
-  },
-  {
-    path: '/brands',
-    component: lazy(() => import('../../views/brand/Brand'))
-  },
-  {
-    path: '/brand/:edit/:id/',
-    component: lazy(() => import('../../views/brand/detail/BrandDetail'))
-  },
-  {
-    path: '/references',
-    component: lazy(() => import('../../views/references/Reference'))
-  },
-  {
-    path: '/reference/:edit/:id/',
-    component: lazy(() => import('../../views/references/detail/ReferenceDetail'))
-  },
-  {
     path: '/login',
     component: lazy(() => import('../../views/login/Login')),
     layout: 'BlankLayout',
