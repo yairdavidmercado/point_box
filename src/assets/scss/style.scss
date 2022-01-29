@@ -1,0 +1,139 @@
+/*================================================================================
+	Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+	Version: 2.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+@import 'variables/variables';
+
+
+// Hide Datatable pagination
+.rdt_Pagination {
+	display: none !important;
+}
+
+.dataTable-select {
+	height: 29.28px !important;
+	font-size: .857rem;
+}
+
+//Decrease size react-pagination
+@media (max-width: 500px) {
+	ul.pagination {
+		justify-content: center !important;
+	}
+
+    ul.pagination li {
+        width: 25px !important;
+    }
+}
+
+@media (max-width: 350px) {
+	.divHeaderDataTable {
+    	max-width: 100%;
+		flex: 0 0 100%;
+		justify-content: center !important;
+	}
+}
+
+.activeBadge{
+	background-color: $successDisabled !important;
+	color: $success !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+
+.bloqueadoBadge{
+	background-color: $dangerDisabled !important;
+	color: $danger !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+.inactivoBadge{
+	background-color: $darkDisabled !important;
+	color: $dark !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+.pendienteBadge{
+	background-color: $warningDisabled !important;
+	color: $warning !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+.desvinculadoBadge{
+	background-color: $darkDisabled !important;
+	color: $dark !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+.defaultBadge{
+	background-color: $infoDisabled !important;
+	color: $info !important;
+	text-align: center;
+	border-radius: 1.5rem;
+	padding: 0.1rem 0.5rem;
+	text-align: center;
+}
+
+.rdt_Table div:not(.dropdown-menu)  {
+	background-color: transparent;
+}
+
+.rdt_TableHead, .rdt_TableHeadRow {
+	background-color: #F3F2F7 !important;
+	border-top: 1px solid;
+	border-color: #EBE9F1;
+	min-height: 0 !important;
+	height: 38px !important;
+}
+
+.rdt_Table .disabled-row {
+	background-color: #F2F3F4 !important;
+}
+
+.file-card {
+	cursor: pointer;
+	&:hover {
+		background-color: rgba($color: $darkDisabled, $alpha: 0.1)
+	}
+}
+
+.text-focus {
+	color: $primaryFocus;
+}
+
+.text-link {
+	color: $primaryActive;
+	text-decoration: underline;
+	cursor: pointer;
+	&:hover {
+		color: $primaryFocus;
+	}
+}
+
+.dropzone {
+	display: flex;
+	cursor: pointer;
+	min-height: 300px;
+	align-items: center;
+	border-radius: .357rem;
+	justify-content: center;
+	background-color: #f8f8f8;
+	border: 1px dashed $primary;
+}
