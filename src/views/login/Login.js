@@ -36,10 +36,18 @@ const Login = () => {
   const dispatch = useDispatch()  
 
   const [rememberMe, setRememberMe] = useState(false)
+  const [id_pos, setIdPos] = useState('')
   const [mail, setMail] = useState('')
   const [pass, setPass] = useState('')
   const [showInputs, setShowInputs] = useState(false)
   const [attempts, setAttempts] = useState(0)
+
+  const [emailSent, setEmailSent] = useState(false)
+
+  const [errorIdPos, setErrorIdPos] = useState({
+    error: false,
+    message: ''
+  })
 
   const [errorEmail, setErrorEmail] = useState({
     error: false,
@@ -56,16 +64,16 @@ const Login = () => {
   useEffect(() => {
 
     //Remember me
-    if (localStorage.getItem('lov') !== null) {
+    if (localStorage.getItem('pointbox') !== null) {
       
       setRememberMe(true)
       
-      const credentials = JSON.parse(localStorage.getItem('lov'))
+      const credentials = JSON.parse(localStorage.getItem('pointbox'))
       
+      setValue('id_pos', credentials.id_pos)
       setValue('email', credentials.email)
-      setValue('password', credentials.password)
+      setIdPos(credentials.id_pos)
       setMail(credentials.email)
-      setPass(credentials.password)
 
     }
     if (attempts > 2) {
@@ -80,6 +88,7 @@ const Login = () => {
   }, [attempts])
 
   const handleChange = (e) => {
+    if (e.target.name === 'id_pos') setErrorIdPos({...errorIdPos, error: false, message: ''})
     if (e.target.name === 'email') setErrorEmail({...errorEmail, error: false, message: ''})
     if (e.target.name === 'password') setErrorPassword({...errorPassword, error: false, message: ''})
 
@@ -91,40 +100,104 @@ const Login = () => {
     if (!rememberMe) {
       setRememberMe(true) 
     } else {
-      localStorage.removeItem('lov')
+      localStorage.removeItem('pointbox')
       setRememberMe(false) 
+      setValue('id_pos', '')
       setValue('email', '')
-      setValue('password', '')
+    }
+  }
+
+  const onValidateSubmit = data => {
+    setSpinner(true)
+    if (isObjEmpty(errors)) {
+
+      setSpinner(false)
+        setShowInputs(true)
+        //Remember me
+        if (rememberMe) {
+          
+          const credentials = {
+            id_pos,
+            email: mail
+          }
+
+          localStorage.setItem('pointbox', JSON.stringify(credentials))
+        }
+
+        //const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
+        //dispatch(handleLogin(data))
+        // ability.update(test)
+        //history.push('/home')
+      
+      /* useJwt.login(data).then(res => { 
+        setSpinner(false)
+        setShowPassword(true)
+        //Remember me
+        if (rememberMe) {
+          
+          const credentials = {
+            id_pos,
+            email: mail
+          }
+
+          localStorage.setItem('pointbox', JSON.stringify(credentials))
+        }
+
+        const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
+        dispatch(handleLogin(data))
+        // ability.update(test)
+        history.push('/home')
+          
+      }).catch(err => {
+          setSpinner(false)
+          
+          //Error validación
+          if (err.response.status === 422) {
+            if (err.response.data.errors.email !== undefined) {
+              setErrorEmail({...errorEmail, error: true, message: err.response.data.errors.email[0]})
+            } else {
+              setErrorEmail({...errorEmail, error: false, message: ''})
+            }
+
+            if (err.response.data.errors.password !== undefined) {
+              setErrorPassword({...errorPassword, error: true, message: err.response.data.errors.password[0]})
+            } else {
+              setErrorPassword({...errorPassword, error: false, message: ''})
+            }
+          }
+
+          //Error usuario o contraseña incorrectos - Intentos
+          if (err.response.status === 400) {
+            setErrorPassword({...errorPassword, error: true, message: err.response.data.error})
+            setAttempts(err.response.data.count_password)
+          }
+      }) */
     }
   }
 
   const onSubmit = data => {
     setSpinner(true)
-
     if (isObjEmpty(errors)) {
-      useJwt
-        .login(data)
-        .then(res => { 
-          setSpinner(false)
-          setShowPassword(true)
-          //Remember me
-          if (rememberMe) {
-            
-            const credentials = {
-              email: mail,
-              password: pass
-            }
-
-            localStorage.setItem('lov', JSON.stringify(credentials))
+      useJwt.login(data).then(res => { 
+        setSpinner(false)
+        setShowPassword(true)
+        //Remember me
+        if (rememberMe) {
+          
+          const credentials = {
+            email: mail,
+            password: pass
           }
 
-          const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
-          dispatch(handleLogin(data))
-          // ability.update(test)
-          history.push('/home')
+          localStorage.setItem('pointbox', JSON.stringify(credentials))
+        }
+
+        const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
+        dispatch(handleLogin(data))
+        // ability.update(test)
+        history.push('/home')
           
-        })
-        .catch(err => {
+      }).catch(err => {
           setSpinner(false)
           
           //Error validación
@@ -151,6 +224,43 @@ const Login = () => {
     }
   }
 
+  const handleBackToLogin = e => { 
+    e.preventDefault() 
+    history.push('login')
+}
+
+if (emailSent) {
+    return (
+        <div className='auth-wrapper auth-v1 px-2'>
+            <div className='auth-inner py-2'>
+                <Card className='mb-0'>
+                    <CardBody>
+                        <div className="row text-center">
+                            <div className="col-md-6 mt-2"><img  src={logo} width="100" /></div>
+                            <div className="col-md-6 mt-2"><img  src={icon} /></div>
+                        </div>
+                        <CardTitle tag='h4' className='mb-1 mt-3 text-center text-info'>
+                            ¡Enviado satisfactoriamente!
+                        </CardTitle>
+                        <CardText className='mb-2'>
+                            Hemos enviado un correo electrónico a <span className="text-primary">{email}</span>.
+                            Por favor verifica si hay un
+                            correo electrónico de Wabox y has clic en el
+                            enlace para restablecer tu contraseña.
+                        </CardText>
+                        <p className='text-center mt-2'>
+                            <a href="" onClick={handleBackToLogin}>
+                                <ChevronLeft size={20} /> Regresar al inicio de sesión
+                            </a>
+                        </p>
+                    </CardBody>
+                </Card>
+            </div>
+        </div>
+    )
+}
+
+
   return (
     <div className='auth-wrapper auth-v1 px-2'>
       <div className='auth-inner py-2'>
@@ -160,10 +270,10 @@ const Login = () => {
               <img src={logo} width="100" />
             </Link>
             <CardTitle tag='h3' className='mb-1'>
-              ¡Bienvenid@ a LOV.
+              ¡Bienvenid@ a MI PUNTO BOX.
             </CardTitle>
-            <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>
-              {!showInputs &&
+            {!showInputs &&
+            <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onValidateSubmit)}>
               <FormGroup>
               <Label className='form-label' for='email'>
                 ID POS
@@ -178,16 +288,14 @@ const Login = () => {
                 innerRef={register({ required: true})}
                 onChange={handleChange}
               />
-              {errors['email'] && <FormFeedback>Debe ingresar una dirección de correo electrónico válida</FormFeedback>}
+              {errors['email'] && <FormFeedback>Debe ingresar el id pos</FormFeedback>}
               {errorEmail.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorEmail.message}</span>}
-            </FormGroup>}
-              {!showInputs && 
+            </FormGroup>
               <FormGroup>
               <Label className='form-label' for='email'>
                 Correo electrónico
               </Label>
               <Input
-                autoFocus
                 type='email'
                 id='email'
                 name='email'
@@ -198,17 +306,7 @@ const Login = () => {
               />
               {errors['email'] && <FormFeedback>Debe ingresar una dirección de correo electrónico válida</FormFeedback>}
               {errorEmail.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorEmail.message}</span>}
-            </FormGroup>}
-              
-              {
-              showInputs && 
-              <PasswordField
-              errors={errors}
-              errorPassword={errorPassword}
-              register={register}
-              handleChange={handleChange}
-              attempts={attempts}
-              />}
+            </FormGroup>
               <FormGroup>
                 <CustomInput 
                   type='checkbox' 
@@ -218,12 +316,26 @@ const Login = () => {
                   checked={rememberMe}
                   onChange={handleRememberMe}
                 />
-              </FormGroup>
+              </FormGroup> 
+              <Button.Ripple type='submit' id="btnSubmit" color='primary' block>
+                Validar sesión
+                {spinner && <Spinner className="ml-2" color='white' size='sm' />}
+              </Button.Ripple>
+            </Form>}
+            {showInputs &&
+            <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>
+              <PasswordField
+              errors={errors}
+              errorPassword={errorPassword}
+              register={register}
+              handleChange={handleChange}
+              attempts={attempts}
+              />
               <Button.Ripple type='submit' id="btnSubmit" color='primary' block>
                 Iniciar sesión
                 {spinner && <Spinner className="ml-2" color='white' size='sm' />}
               </Button.Ripple>
-            </Form>
+            </Form>}
           </CardBody>
         </Card>
       </div>
