@@ -25,7 +25,7 @@ const ValidateLink = () => {
     })
 
     const [email, setEmail] = useState('')
-    const [emailSent, setEmailSent] = useState(false)
+    const [emailSent, setEmailSent] = useState(true)
 
     const { register, errors, handleSubmit } = useForm()
 

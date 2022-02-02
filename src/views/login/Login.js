@@ -321,6 +321,12 @@ if (emailSent) {
                 Validar sesión
                 {spinner && <Spinner className="ml-2" color='white' size='sm' />}
               </Button.Ripple>
+              <p className='text-center mt-2'>
+                <span className='mr-25'>¿Aun no tienes una cuenta?</span>
+                <Link to='/register'>
+                    <span>Ingresa aquí</span>
+                </Link>
+              </p>
             </Form>}
             {showInputs &&
             <Form className='auth-login-form mt-2' onSubmit={handleSubmit(onSubmit)}>

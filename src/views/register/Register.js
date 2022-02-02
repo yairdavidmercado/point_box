@@ -11,11 +11,7 @@ import '@styles/base/pages/page-auth.scss'
 import useJwt from '@src/auth/jwt/useJwt'
 import logo from "../../assets/images/logo/logo-lov.svg"
 import icon from "../../assets/images/icons/letter.svg"
-import facebookLogo from "../../assets/images/logo/logo-facebook.svg"
-import googleLogo from "../../assets/images/logo/logo-google.svg"
 import { refreshTokenGoogle, validateEmail, validatePassword } from '../../helpers/helpers'
-import GoogleLogin from 'react-google-login'
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
 import ToastMessage from '../ui/ToastMessage'
 import { toast } from 'react-toastify'
@@ -67,7 +63,7 @@ const Register = () => {
     const { register, errors, handleSubmit } = useForm()
 
     const onSubmit = data => {
-        
+        console.log(data)
         setSpinner(true)
 
         if (isObjEmpty(errors)) {
@@ -78,9 +74,9 @@ const Register = () => {
 
                 const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
                 
-                dispatch(handleLogin(data))
+                //dispatch(handleLogin(data))
                 // ability.update(test)
-                history.push('/home')
+                history.push('/validate_link')
             })
             .catch(err => {
                 setSpinner(false)
@@ -281,7 +277,7 @@ const Register = () => {
                             </CardTitle>
                             <CardText className='mb-2'>
                                 Hemos enviado un correo electrónico a <span className="text-primary">{mail}</span>.
-                                Por favor verifica si hay un correo electrónico de Wabox. Completa el formulario y has clic en el enlace para desvincular tu cuenta.
+                                Por favor verifica si hay un correo electrónico de Mi Punto Box. Completa el formulario y has clic en el enlace para desvincular tu cuenta.
                             </CardText>
                             <p className='text-center mt-2'>
                                 <a href="" onClick={handleBackToLogin}>
@@ -310,16 +306,16 @@ const Register = () => {
                     <Form className='auth-register-form mt-2' onSubmit={handleSubmit(onSubmit)}>
                         <FormGroup>
                             <Label className='form-label' for='name'>
-                                Nombre
+                                ID POS
                             </Label>
                             <Input 
                                 autoFocus
                                 type='text' 
                                 id='name'
                                 name='name'
-                                placeholder='johndoe' 
+                                placeholder='id pos' 
                                 className={classnames({ 'is-invalid': errors['name'] })}
-                                innerRef={register({ validate: value => value.length > 0 && value.length < 50 })}
+                                innerRef={register(registerOptions.number)}
                                 onChange={handleChange}
                             />
                             {errors['name'] && <FormFeedback>El campo es obligatorio, debe tener entre 1 hasta 50 caracteres</FormFeedback>}
@@ -362,6 +358,20 @@ const Register = () => {
                             {errorPassword.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorPassword.message}</span>}
                         </FormGroup>
                         <FormGroup>
+                            <Label className='form-label' for='confirmPassword'>
+                                Confirmar contraseña
+                            </Label>
+                            <InputPasswordToggle 
+                                className='input-group-merge' 
+                                id='confirmPassword' 
+                                name='confirmPassword'
+                                className={classnames({ 'is-invalid': errors['confirmPassword'] })}
+                                innerRef={register({ validate: value => validatePassword(value) })}
+                            />
+                            {errors['confirmPassword'] && <FormFeedback>La contraseña debe tener mínimo 8 caracteres, un número, una letra mayúscula, una letra minúscula y un carácter especial</FormFeedback>}
+                            {errorPassword.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorPassword.message}</span>}
+                        </FormGroup>
+                        {/* <FormGroup>
                             <CustomInput
                                 type='checkbox'
                                 className='custom-control-Primary'
@@ -371,7 +381,7 @@ const Register = () => {
                                 innerRef={register({ required: true })}
                             />
                             {errors['terms'] && <span className="text-danger" style={{fontSize: '12px'}}>Debe aceptar los términos y condiciones </span>}
-                        </FormGroup>
+                        </FormGroup> */}
 
                         <Button.Ripple type='submit' color='primary' block>
                             Registrarme
@@ -385,32 +395,9 @@ const Register = () => {
                         <span>Ingresa aquí</span>
                     </Link>
                     </p>
-                    <div className='divider my-2'>
+                    {/* <div className='divider my-2'>
                     <div className='divider-text'>o regístrate con</div>
-                    </div>
-                    <div className='auth-footer-btn d-flex justify-content-center'>
-                        
-                        <GoogleLogin
-                            clientId={googleId}
-                            render={renderProps => (
-                            <img className="mr-2" src={googleLogo} style={{cursor: 'pointer'}} onClick={renderProps.onClick} />
-                            )}
-                            onSuccess={handleLoginGoogle}
-                            onFailure={onFailureLoginGoogle}
-                            cookiePolicy={'single_host_origin'}
-                        />
-
-                        <FacebookLogin
-                            appId={facebookId}
-                            autoLoad={false}
-                            fields="name,email,picture"
-                            scope="public_profile, email"
-                            callback={handleLoginFacebook}
-                            render={renderProps => (
-                            <img src={facebookLogo} width="33" style={{cursor: 'pointer'}} onClick={renderProps.onClick} />
-                            )}
-                        />
-                    </div>
+                    </div> */}
                 </CardBody>
                 </Card>
             </div>
