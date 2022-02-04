@@ -33,6 +33,9 @@ const Register = () => {
     
     const [emailUsed, setEmailUsed] = useState(false)
 
+    const [password, setPassword] = useState(false)
+    const [passwordConfirm, setPasswordConfirm] = useState(false)
+
     const [errorName, setErrorName] = useState({
         error: false,
         message: ''
@@ -48,6 +51,19 @@ const Register = () => {
         message: ''
     })
 
+    const [errorPasswordDiferent, setErrorPasswordDiferent] = useState(false)
+
+    function OnlyNumber(event) {
+        event.target.value = event.target.value.replace(/[^0-9]/g, '')
+    }
+
+    function validatePasswordRequest() {
+        if (password === passwordConfirm) {
+            setErrorPasswordDiferent(false)
+        } else {
+            setErrorPasswordDiferent(true)
+        }
+    }
     const handleChange = (e) => {
         if (e.target.name === 'name') setErrorName({...errorName, error: false, message: ''})
 
@@ -126,76 +142,6 @@ const Register = () => {
             <a className='ml-25' href='/' onClick={e => e.preventDefault()}>Política de privacidad y tratamiento de datos personales.</a>
             </Fragment>
         )
-    }
-
-    const handleLoginGoogle = (res) => {
-
-        setSpinner(true)
-
-        const data = {
-          name: res.profileObj.name,
-          email: res.profileObj.email
-        }
-    
-        //Axios
-        useJwt
-          .loginGoogle(data)
-          .then(res => { 
-            setSpinner(false)
-            const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
-            dispatch(handleLogin(data))
-            // ability.update(test)
-            history.push('/home')
-          })
-          .catch(err => {
-            setSpinner(false)
-            toast.error(
-                <ToastMessage 
-                    icon={<X size={12} />}
-                    color='danger'
-                    title='¡Error!'
-                    message='Se ha producido un error.'
-                />, { hideProgressBar: true, autoClose: 5000 }
-              )
-          })
-    
-        refreshTokenGoogle(res)
-    }
-    
-    const onFailureLoginGoogle = (res) => {
-        setSpinner(false)
-    }
-
-    const handleLoginFacebook = (response) => {
-
-        setSpinner(true)
-
-        const data = {
-            name: response.name,
-            email: response.email
-        }
-
-        //Axios
-        useJwt
-            .loginFacebook(data)
-            .then(res => { 
-            setSpinner(false)
-                const data = { ...res.data.users, accessToken: res.data.token, refreshToken: res.data.token }
-            dispatch(handleLogin(data))
-                // ability.update(test)
-                history.push('/home')
-            })
-            .catch(err => {
-                setSpinner(false)
-                toast.error(
-                    <ToastMessage 
-                        icon={<X size={12} />}
-                        color='danger'
-                        title='¡Error!'
-                        message='Se ha producido un error.'
-                    />, { hideProgressBar: true, autoClose: 5000 }
-                  )
-            })    
     }
 
     const handleDeleteAccount = (e) => {
@@ -313,10 +259,10 @@ const Register = () => {
                                 type='text' 
                                 id='name'
                                 name='name'
-                                placeholder='id pos' 
+                                placeholder='id pos'
                                 className={classnames({ 'is-invalid': errors['name'] })}
-                                innerRef={register(registerOptions.number)}
-                                onChange={handleChange}
+                                innerRef={register({required: true})}
+                                onChange={OnlyNumber}
                             />
                             {errors['name'] && <FormFeedback>El campo es obligatorio, debe tener entre 1 hasta 50 caracteres</FormFeedback>}
                             {errorName.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorName.message}</span>}
@@ -353,6 +299,10 @@ const Register = () => {
                                 name='password'
                                 className={classnames({ 'is-invalid': errors['password'] })}
                                 innerRef={register({ validate: value => validatePassword(value) })}
+                                onBlur={(e) => {
+                                    setPassword(e.target.value)
+                                    validatePasswordRequest()
+                                }}
                             />
                             {errors['password'] && <FormFeedback>La contraseña debe tener mínimo 8 caracteres, un número, una letra mayúscula, una letra minúscula y un carácter especial</FormFeedback>}
                             {errorPassword.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorPassword.message}</span>}
@@ -367,9 +317,14 @@ const Register = () => {
                                 name='confirmPassword'
                                 className={classnames({ 'is-invalid': errors['confirmPassword'] })}
                                 innerRef={register({ validate: value => validatePassword(value) })}
+                                onBlur={(e) => {
+                                    setPasswordConfirm(e.target.value)
+                                    validatePasswordRequest()
+                                }}
                             />
                             {errors['confirmPassword'] && <FormFeedback>La contraseña debe tener mínimo 8 caracteres, un número, una letra mayúscula, una letra minúscula y un carácter especial</FormFeedback>}
                             {errorPassword.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorPassword.message}</span>}
+                            {errorPasswordDiferent && <FormFeedback>Las contraseñas no coinciden</FormFeedback>}
                         </FormGroup>
                         {/* <FormGroup>
                             <CustomInput

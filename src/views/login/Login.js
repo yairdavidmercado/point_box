@@ -87,6 +87,10 @@ const Login = () => {
 
   }, [attempts])
 
+  function OnlyNumber(event) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '')
+  }
+
   const handleChange = (e) => {
     if (e.target.name === 'id_pos') setErrorIdPos({...errorIdPos, error: false, message: ''})
     if (e.target.name === 'email') setErrorEmail({...errorEmail, error: false, message: ''})
@@ -227,9 +231,9 @@ const Login = () => {
   const handleBackToLogin = e => { 
     e.preventDefault() 
     history.push('login')
-}
+  }
 
-if (emailSent) {
+  if (emailSent) {
     return (
         <div className='auth-wrapper auth-v1 px-2'>
             <div className='auth-inner py-2'>
@@ -258,8 +262,7 @@ if (emailSent) {
             </div>
         </div>
     )
-}
-
+  }
 
   return (
     <div className='auth-wrapper auth-v1 px-2'>
@@ -286,7 +289,7 @@ if (emailSent) {
                 placeholder='id pos'
                 className={classnames({ 'is-invalid': errors['email'] })}
                 innerRef={register({ required: true})}
-                onChange={handleChange}
+                onChange={OnlyNumber}
               />
               {errors['email'] && <FormFeedback>Debe ingresar el id pos</FormFeedback>}
               {errorEmail.error && <span className="text-danger" style={{fontSize: '12px'}}>{errorEmail.message}</span>}
